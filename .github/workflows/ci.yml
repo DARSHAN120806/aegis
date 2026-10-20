@@ -1,0 +1,60 @@
+name: validate
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  application:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: python -m venv .venv && .venv/bin/pip install -r backend/requirements.lock
+      - run: npm --prefix frontend ci && npm --prefix chaincode ci && npm --prefix fabric-service ci --ignore-scripts
+      - run: cd backend && ../.venv/bin/ruff check app tests && ../.venv/bin/ruff format --check app tests && ../.venv/bin/pytest -q
+      - run: npm --prefix frontend run format:check && npm --prefix frontend run build && npm --prefix chaincode run build && npm --prefix chaincode test && npm --prefix fabric-service run check && npm --prefix fabric-service test
+      - run: npm --prefix frontend audit --audit-level=high && npm --prefix chaincode audit --audit-level=high && npm --prefix fabric-service audit --audit-level=high
+      - run: .venv/bin/pip install pip-audit==2.10.1 && .venv/bin/pip-audit -r backend/requirements.lock
+      - run: cd frontend && npx playwright install --with-deps chromium
+      - name: Browser integration
+        run: |
+          python scripts/setup.py
+          cd backend
+          ../.venv/bin/uvicorn app.main:app --env-file ../.env --port 8000 &
+          cd ../frontend
+          npm run dev &
+          npx playwright test
+
+      - name: Real infrastructure adapter tests
+        run: |
+          docker compose --profile integration up -d postgres redis objects
+          .venv/bin/python - <<'PY'
+          import os, subprocess, time
+          from dotenv import dotenv_values
+          values=dotenv_values('.env')
+          env={**os.environ, **values, 'AEGIS_TEST_POSTGRES': f"postgresql+psycopg://aegis:{values['POSTGRES_PASSWORD']}@127.0.0.1:5432/aegis", 'AEGIS_TEST_REDIS':'redis://127.0.0.1:6379/0','AEGIS_TEST_S3':'http://127.0.0.1:9000'}
+          for attempt in range(10):
+              result=subprocess.run(['.venv/bin/python','scripts/integration_dependencies.py'],env=env,capture_output=True,text=True)
+              if result.returncode==0:
+                  print(result.stdout)
+                  break
+              time.sleep(3)
+          else:
+              raise SystemExit('Infrastructure integration test failed; inspect dependency container logs without printing secrets')
+          env['AEGIS_DATABASE_URL']=env['AEGIS_TEST_POSTGRES']
+          subprocess.run(['../.venv/bin/python','-m','app.migrate'],cwd='backend',env=env,check=True)
+          subprocess.run(['../.venv/bin/python','-m','app.migrate'],cwd='backend',env=env,check=True)
+          PY
+      - name: Validate Docker images
+        run: |
+          cp .env.production.example .env.production
+          docker compose --env-file .env.production -f compose.production.yaml config --quiet
+          docker compose build
+          docker build -t aegis-bridge:test fabric-service
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: browser-evidence
+          path: frontend/test-results

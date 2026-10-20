@@ -1,0 +1,18 @@
+[project]
+name = "aegis-api"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["fastapi>=0.115,<1", "uvicorn>=0.34,<1", "pydantic-settings>=2.8,<3", "SQLAlchemy>=2.0,<3", "PyJWT>=2.10,<3", "cryptography>=44", "psycopg[binary]>=3.2,<4", "redis>=8,<9", "boto3>=1.36,<2", "httpx>=0.28,<1"]
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "ruff>=0.11,<1"]
+[tool.pytest.ini_options]
+pythonpath = ["."]
+[tool.ruff]
+line-length = 110
+
+[tool.ruff.lint]
+extend-safe-fixes = ["UP"]
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Header"]
+[tool.ruff.lint.per-file-ignores]
+"tests/conftest.py" = ["E402"]

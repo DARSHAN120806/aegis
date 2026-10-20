@@ -1,0 +1,6 @@
+
+> aegis-ui@0.1.0 format:check
+> prettier --check src tests ../chaincode/src ../chaincode/test ../fabric-service/src ../fabric-service/test
+
+Checking formatting...
+All matched files use Prettier code style!

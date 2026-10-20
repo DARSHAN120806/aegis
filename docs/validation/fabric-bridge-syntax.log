@@ -1,0 +1,4 @@
+
+> aegis-fabric-service@1.0.0 check
+> node --check src/server.mjs
+

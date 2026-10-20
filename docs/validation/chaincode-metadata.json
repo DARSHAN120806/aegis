@@ -1,0 +1,546 @@
+{
+    "$schema": "https://hyperledger.github.io/fabric-chaincode-node/main/api/contract-schema.json",
+    "contracts": {
+        "Operations": {
+            "name": "Operations",
+            "contractInstance": {
+                "name": "Operations",
+                "default": true
+            },
+            "transactions": [
+                {
+                    "name": "WhoAmI",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ]
+                },
+                {
+                    "name": "Bootstrap",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Get",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "name": "arg1",
+                            "description": "Argument 1",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Execute",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "name": "arg1",
+                            "description": "Argument 1",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Claim",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "info": {
+                "title": "",
+                "version": ""
+            }
+        },
+        "IdentityRegistry": {
+            "name": "IdentityRegistry",
+            "contractInstance": {
+                "name": "IdentityRegistry"
+            },
+            "transactions": [
+                {
+                    "name": "Bootstrap",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Create",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "name": "arg1",
+                            "description": "Argument 1",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "SetStatus",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "name": "arg1",
+                            "description": "Argument 1",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Get",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "info": {
+                "title": "",
+                "version": ""
+            }
+        },
+        "CredentialRegistry": {
+            "name": "CredentialRegistry",
+            "contractInstance": {
+                "name": "CredentialRegistry"
+            },
+            "transactions": [
+                {
+                    "name": "Issue",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "name": "arg1",
+                            "description": "Argument 1",
+                            "schema": {
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "name": "arg2",
+                            "description": "Argument 2",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Revoke",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Verify",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "name": "arg1",
+                            "description": "Argument 1",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "info": {
+                "title": "",
+                "version": ""
+            }
+        },
+        "RolePolicyRegistry": {
+            "name": "RolePolicyRegistry",
+            "contractInstance": {
+                "name": "RolePolicyRegistry"
+            },
+            "transactions": [
+                {
+                    "name": "Matrix",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ]
+                }
+            ],
+            "info": {
+                "title": "",
+                "version": ""
+            }
+        },
+        "AssetRegistry": {
+            "name": "AssetRegistry",
+            "contractInstance": {
+                "name": "AssetRegistry"
+            },
+            "transactions": [
+                {
+                    "name": "Mint",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "name": "arg1",
+                            "description": "Argument 1",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Assign",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "name": "arg1",
+                            "description": "Argument 1",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Archive",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Get",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Verify",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "name": "arg1",
+                            "description": "Argument 1",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "info": {
+                "title": "",
+                "version": ""
+            }
+        },
+        "OwnershipTransfer": {
+            "name": "OwnershipTransfer",
+            "contractInstance": {
+                "name": "OwnershipTransfer"
+            },
+            "transactions": [
+                {
+                    "name": "Request",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "name": "arg1",
+                            "description": "Argument 1",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Approve",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Accept",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Cancel",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "info": {
+                "title": "",
+                "version": ""
+            }
+        },
+        "AuditRegistry": {
+            "name": "AuditRegistry",
+            "contractInstance": {
+                "name": "AuditRegistry"
+            },
+            "transactions": [
+                {
+                    "name": "Provenance",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ],
+                    "parameters": [
+                        {
+                            "name": "arg0",
+                            "description": "Argument 0",
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Events",
+                    "tags": [
+                        "SUBMIT",
+                        "submitTx"
+                    ]
+                }
+            ],
+            "info": {
+                "title": "",
+                "version": ""
+            }
+        },
+        "org.hyperledger.fabric": {
+            "name": "org.hyperledger.fabric",
+            "contractInstance": {
+                "name": "org.hyperledger.fabric"
+            },
+            "transactions": [
+                {
+                    "name": "GetMetadata"
+                }
+            ],
+            "info": {
+                "title": "",
+                "version": ""
+            }
+        }
+    },
+    "info": {
+        "version": "0.1.0",
+        "title": "aegis-chaincode"
+    },
+    "components": {
+        "schemas": {}
+    }
+}

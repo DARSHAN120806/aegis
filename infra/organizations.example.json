@@ -1,0 +1,20 @@
+{
+  "Org1MSP": {
+    "peer": "peer0.org1.example.com:7051",
+    "peerHost": "peer0.org1.example.com",
+    "tlsRoot": "/run/fabric/org1-peer-tls.pem",
+    "caUrl": "https://ca.org1.example.com:7054",
+    "caName": "ca-org1",
+    "caTlsRoot": "/run/fabric/org1-ca-tls.pem",
+    "registrarMsp": "/run/fabric/org1-registrar/msp"
+  },
+  "Org2MSP": {
+    "peer": "peer0.org2.example.com:9051",
+    "peerHost": "peer0.org2.example.com",
+    "tlsRoot": "/run/fabric/org2-peer-tls.pem",
+    "caUrl": "https://ca.org2.example.com:8054",
+    "caName": "ca-org2",
+    "caTlsRoot": "/run/fabric/org2-ca-tls.pem",
+    "registrarMsp": "/run/fabric/org2-registrar/msp"
+  }
+}

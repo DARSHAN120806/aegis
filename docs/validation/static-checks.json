@@ -1,0 +1,11 @@
+{
+  "yaml_parsed": [
+    "compose.production.yaml",
+    "compose.yaml",
+    "infra\\kubernetes\\application.yaml",
+    "infra\\kubernetes\\kustomization.yaml",
+    ".github\\workflows\\ci.yml"
+  ],
+  "python_syntax_files": 20,
+  "qualification": "Parsing only; Docker Compose, Kubernetes admission and live migrations were not executed"
+}

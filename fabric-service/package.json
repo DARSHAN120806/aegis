@@ -1,0 +1,1 @@
+{"name":"aegis-fabric-service","version":"1.0.0","private":true,"type":"module","scripts":{"start":"node src/server.mjs","check":"node --check src/server.mjs","test":"node --test test/*.test.mjs"},"dependencies":{"@fidm/x509":"1.2.1","@grpc/grpc-js":"1.14.6","@hyperledger/fabric-gateway":"1.13.0"}}

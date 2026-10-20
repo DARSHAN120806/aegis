@@ -1,0 +1,125 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata: {name: aegis}
+automountServiceAccountToken: false
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: api}
+spec:
+  replicas: 2
+  selector: {matchLabels: {app: aegis-api}}
+  template:
+    metadata: {labels: {app: aegis-api}}
+    spec:
+      serviceAccountName: aegis
+      securityContext: {runAsNonRoot: true, runAsUser: 10001, fsGroup: 10001, seccompProfile: {type: RuntimeDefault}}
+      containers:
+        - name: api
+          image: aegis-api:1.0.0
+          envFrom: [{secretRef: {name: aegis-api}}]
+          ports: [{containerPort: 8000}]
+          resources: {requests: {cpu: 250m, memory: 256Mi}, limits: {cpu: '1', memory: 768Mi}}
+          securityContext: {allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: {drop: [ALL]}}
+          readinessProbe: {httpGet: {path: /health/ready, port: 8000}, timeoutSeconds: 25, periodSeconds: 30}
+          livenessProbe: {httpGet: {path: /health/live, port: 8000}, timeoutSeconds: 3, periodSeconds: 30}
+          volumeMounts: [{name: tls, mountPath: /run/tls, readOnly: true}, {name: keys, mountPath: /run/keys, readOnly: true}, {name: tmp, mountPath: /tmp}]
+      volumes: [{name: tls, secret: {secretName: aegis-service-tls, items: [{key: ca.crt, path: ca.crt}]}}, {name: keys, secret: {secretName: aegis-credential-keys, defaultMode: 288, items: [{key: vc-private.pem, path: vc-private.pem}]}}, {name: tmp, emptyDir: {}}]
+---
+apiVersion: v1
+kind: Service
+metadata: {name: api}
+spec: {selector: {app: aegis-api}, ports: [{port: 8000, targetPort: 8000}]}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: worker}
+spec:
+  replicas: 1
+  strategy: {type: Recreate}
+  selector: {matchLabels: {app: aegis-worker}}
+  template:
+    metadata: {labels: {app: aegis-worker}}
+    spec:
+      serviceAccountName: aegis
+      terminationGracePeriodSeconds: 60
+      securityContext: {runAsNonRoot: true, runAsUser: 10001, fsGroup: 10001, seccompProfile: {type: RuntimeDefault}}
+      containers:
+        - name: worker
+          image: aegis-api:1.0.0
+          command: [python, -m, app.worker]
+          envFrom: [{secretRef: {name: aegis-api}}]
+          resources: {requests: {cpu: 250m, memory: 256Mi}, limits: {cpu: '1', memory: 768Mi}}
+          securityContext: {allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: {drop: [ALL]}}
+          volumeMounts: [{name: tls, mountPath: /run/tls, readOnly: true}, {name: keys, mountPath: /run/keys, readOnly: true}, {name: tmp, mountPath: /tmp}]
+      volumes: [{name: tls, secret: {secretName: aegis-service-tls, items: [{key: ca.crt, path: ca.crt}]}}, {name: keys, secret: {secretName: aegis-credential-keys, defaultMode: 288, items: [{key: vc-private.pem, path: vc-private.pem}]}}, {name: tmp, emptyDir: {}}]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: ui}
+spec:
+  replicas: 2
+  selector: {matchLabels: {app: aegis-ui}}
+  template:
+    metadata: {labels: {app: aegis-ui}}
+    spec:
+      serviceAccountName: aegis
+      securityContext: {runAsNonRoot: true, runAsUser: 101, fsGroup: 101, seccompProfile: {type: RuntimeDefault}}
+      containers:
+        - name: ui
+          image: aegis-ui:1.0.0
+          ports: [{containerPort: 8080}]
+          resources: {requests: {cpu: 100m, memory: 64Mi}, limits: {cpu: 500m, memory: 256Mi}}
+          securityContext: {allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: {drop: [ALL]}}
+          readinessProbe: {httpGet: {path: /, port: 8080}}
+          volumeMounts: [{name: tmp, mountPath: /tmp}, {name: cache, mountPath: /var/cache/nginx}, {name: run, mountPath: /var/run}]
+      volumes: [{name: tmp, emptyDir: {}}, {name: cache, emptyDir: {}}, {name: run, emptyDir: {}}]
+---
+apiVersion: v1
+kind: Service
+metadata: {name: ui}
+spec: {selector: {app: aegis-ui}, ports: [{port: 8080, targetPort: 8080}]}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: bridge}
+spec:
+  replicas: 1
+  strategy: {type: Recreate}
+  selector: {matchLabels: {app: aegis-bridge}}
+  template:
+    metadata: {labels: {app: aegis-bridge}}
+    spec:
+      serviceAccountName: aegis
+      securityContext: {runAsNonRoot: true, runAsUser: 1000, fsGroup: 1000, seccompProfile: {type: RuntimeDefault}}
+      containers:
+        - name: bridge
+          image: aegis-bridge:1.0.0
+          envFrom: [{secretRef: {name: aegis-bridge}}]
+          env:
+            - {name: BRIDGE_TOKEN, valueFrom: {secretKeyRef: {name: aegis-bridge, key: AEGIS_FABRIC_TOKEN}}}
+            - {name: BRIDGE_TLS_KEY, value: /run/tls/bridge.key}
+            - {name: BRIDGE_TLS_CERT, value: /run/tls/bridge.crt}
+            - {name: FABRIC_ORGANIZATIONS_FILE, value: /run/fabric/organizations.json}
+            - {name: WALLET_DIR, value: /wallet}
+          ports: [{containerPort: 8443}]
+          resources: {requests: {cpu: 100m, memory: 128Mi}, limits: {cpu: '1', memory: 512Mi}}
+          securityContext: {allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: {drop: [ALL]}}
+          readinessProbe: {tcpSocket: {port: 8443}, timeoutSeconds: 3}
+          volumeMounts: [{name: tls, mountPath: /run/tls, readOnly: true}, {name: fabric, mountPath: /run/fabric, readOnly: true}, {name: wallet, mountPath: /wallet}, {name: tmp, mountPath: /tmp}]
+      volumes: [{name: tls, secret: {secretName: aegis-service-tls, defaultMode: 288, items: [{key: ca.crt, path: ca.crt}, {key: bridge.crt, path: bridge.crt}, {key: bridge.key, path: bridge.key}]}}, {name: fabric, secret: {secretName: aegis-fabric-config, defaultMode: 288, items: [{key: organizations.json, path: organizations.json}, {key: org1-peer-tls.pem, path: org1-peer-tls.pem}, {key: org2-peer-tls.pem, path: org2-peer-tls.pem}, {key: org1-ca-tls.pem, path: org1-ca-tls.pem}, {key: org2-ca-tls.pem, path: org2-ca-tls.pem}, {key: org1-registrar-cert.pem, path: org1-registrar/msp/signcerts/cert.pem}, {key: org1-registrar-key.pem, path: org1-registrar/msp/keystore/key.pem}, {key: org2-registrar-cert.pem, path: org2-registrar/msp/signcerts/cert.pem}, {key: org2-registrar-key.pem, path: org2-registrar/msp/keystore/key.pem}]}}, {name: wallet, persistentVolumeClaim: {claimName: aegis-wallet}}, {name: tmp, emptyDir: {}}]
+---
+apiVersion: v1
+kind: Service
+metadata: {name: bridge}
+spec: {selector: {app: aegis-bridge}, ports: [{port: 8443, targetPort: 8443}]}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: {name: aegis-wallet}
+spec: {accessModes: [ReadWriteOnce], resources: {requests: {storage: 1Gi}}}
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata: {name: api}
+spec: {minAvailable: 1, selector: {matchLabels: {app: aegis-api}}}

@@ -1,0 +1,24 @@
+
+> aegis-chaincode@0.1.0 test
+> node --import tsx --test test/*.test.ts
+
+✔ unique mint, assignment and independent approved transfer (100.2809ms)
+✔ user cannot mint or approve; binding cannot be forged (2.5782ms)
+✔ revocation and certificate MSP boundary enforced (3.273ms)
+✔ no foreign allocation and no second bootstrap (2.453ms)
+✔ transfer expiry and credential revocation (5.754ms)
+✔ durable command replay and global identifier collisions (3.6183ms)
+✔ role governance needs independent authorized approval (20.1781ms)
+✔ cross organization transfer needs source approval and destination acceptance (9.7925ms)
+✔ recipient cannot independently approve and strangers cannot accept (24.8563ms)
+✔ command rejects unrecognized fields, insecure certificate commitments and inactive targets (2.4578ms)
+✔ policy mutation is versioned and requires independent organization approval (7.0325ms)
+✔ Fabric world-state semantics: pending writes are not returned by stub.getState (1.3735ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2007.8015

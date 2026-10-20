@@ -1,0 +1,12 @@
+
+> aegis-ui@0.1.0 test:e2e
+> playwright test
+
+
+Running 3 tests using 1 worker
+
+  ok 1 tests\journey.spec.ts:2:1 › Golden Journey and ownership investigation (20.6s)
+  ok 2 tests\journey.spec.ts:36:1 › mobile login is usable and unauthorized mint rejected by API (1.9s)
+  ok 3 tests\journey.spec.ts:78:1 › destructive identity action requires confirmation and persists only after acceptance (3.5s)
+
+  3 passed (31.1s)

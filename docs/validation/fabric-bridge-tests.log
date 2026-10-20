@@ -1,0 +1,14 @@
+
+> aegis-fabric-service@1.0.0 test
+> node --test test/*.test.mjs
+
+✔ wallet roundtrip, wrong DID, wrong key and tamper rejection (9.0672ms)
+✔ official Gateway SDK exposes durable transaction and event request serialization (263.2411ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1451.559

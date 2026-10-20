@@ -1,0 +1,68 @@
+{
+  "executed_at": "2026-10-20T18:13:35.703486+00:00",
+  "results": [
+    {
+      "check": "backend-lint",
+      "returncode": 0
+    },
+    {
+      "check": "backend-format",
+      "returncode": 0
+    },
+    {
+      "check": "backend-tests",
+      "returncode": 0,
+      "rechecked_at": "2026-10-20T18:23:31.870816+00:00",
+      "note": "29 passed after final guards and commit-status durable audit regressions; see backend-tests.log."
+    },
+    {
+      "check": "typescript-format",
+      "returncode": 0,
+      "previous_returncode": 1,
+      "rechecked_at": "2026-10-20T18:15:37.284882+00:00",
+      "note": "Rechecked successfully after Prettier formatted three late chaincode edits; see typescript-format.log."
+    },
+    {
+      "check": "frontend-build",
+      "returncode": 0
+    },
+    {
+      "check": "chaincode-build",
+      "returncode": 0
+    },
+    {
+      "check": "chaincode-tests",
+      "returncode": 0
+    },
+    {
+      "check": "fabric-bridge-syntax",
+      "returncode": 0
+    },
+    {
+      "check": "fabric-bridge-tests",
+      "returncode": 0
+    },
+    {
+      "check": "browser-tests",
+      "returncode": 0,
+      "rechecked_at": "2026-10-20T18:23:31.870843+00:00",
+      "note": "3 passed again against the restarted final API; see browser-tests.log."
+    },
+    {
+      "check": "frontend-audit",
+      "returncode": 0
+    },
+    {
+      "check": "chaincode-audit",
+      "returncode": 0
+    },
+    {
+      "check": "fabric-service-audit",
+      "returncode": 0
+    },
+    {
+      "check": "python-audit",
+      "returncode": 0
+    }
+  ]
+}
